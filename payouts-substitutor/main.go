@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -13,6 +12,7 @@ import (
 	"github.com/tez-capital/tezpay/common"
 	"github.com/tez-capital/tezpay/constants/enums"
 	"github.com/tez-capital/tezpay/extension"
+	"github.com/tez-capital/tezpay/core/generate"		
 )
 
 type rwCloser struct {
@@ -26,16 +26,6 @@ func (rw rwCloser) Close() error {
 
 type configuration struct {
 	LogFile string `json:"LOG_FILE"`
-}
-
-type hookitem struct {
-	balance int64
-	delegated_balance int64
-	fee_rate float64
-	is_baker_paying_allocation_tx_fee bool
-	is_baker_paying_tx_fee bool
-	recipient string
-	source string
 }
 
 var (
@@ -79,7 +69,7 @@ func main() {
 	})
 
 	extension.RegisterEndpointMethod(endpoint, string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), func(ctx context.Context, params common.ExtensionHookData[any]) (any, *rpc.Error) {
-		var data []hookitem
+		var data []generate.PayoutCandidate 
 		
 		messageData, err := json.Marshal(params)
 		if err != nil {
@@ -88,7 +78,13 @@ func main() {
 
 		json.Unmarshal(messageData, &data)
 		for i := range data {
-			appendToFile([]byte(fmt.Sprintf("%#v\n", data[i])))
+			candidate := data[i] 
+
+			if candidate.Source == candidate.Recipient && candidate.Source.IsContract() {
+				appendToFile([]byte("check if Oven: " + candidate.Source.String() + "\n"))
+			} else {
+				appendToFile([]byte("keep as is: " + candidate.Source.String() + "\n"))
+			}
 		}		
 		
 		return params.Data, nil
