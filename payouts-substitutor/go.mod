@@ -4,7 +4,7 @@ go 1.22.4
 
 require (
 	github.com/alis-is/jsonrpc2 v0.0.0-20240608185122-5f8c3990a8da
-	github.com/tez-capital/tezpay v0.0.0-20240612210656-d90f8ff685b5
+	github.com/tez-capital/tezpay v0.0.0-20240614145829-bd54a22dfa96
 )
 
 require (
