@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -16,6 +15,7 @@ import (
 	"github.com/tez-capital/tezpay/core/generate"		
 
 	ttrpc "github.com/trilitech/tzgo/rpc"
+	"github.com/trilitech/tzgo/micheline"
 )
 
 type rwCloser struct {
@@ -106,7 +106,7 @@ func main() {
 			candidate := data.Data.Candidates[i] 
 
 			if candidate.Recipient.IsContract() && candidate.Source == candidate.Recipient {
-				err = appendToFile([]byte(candidate.Source.String() + ":\n"))
+				err = appendToFile([]byte("\n" + candidate.Source.String() + ":\n"))
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
@@ -116,23 +116,14 @@ func main() {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}
 
-				bigmaps := script.Bigmaps()
+				storage_raw_content := micheline.NewValue(script.StorageType(), script.Storage)
+				storage_map, _ := storage_raw_content.Map()
+				buf, _ := json.MarshalIndent(storage_map, "", "  ")
 
-				for k, v := range bigmaps { 
-					err = appendToFile([]byte("  - map " + k + " -> " + fmt.Sprint(v) + "\n"))
-					if err != nil {
-						return nil, rpc.NewInternalErrorWithData(err.Error())
-					}	
-				}
-
-				bigmap_types := script.BigmapTypes()
-
-				for k, v := range bigmap_types { 
-					err = appendToFile([]byte("  - map type " + k + " -> " + fmt.Sprint(v) + "\n"))
-					if err != nil {
-						return nil, rpc.NewInternalErrorWithData(err.Error())
-					}	
-				}
+				err = appendToFile(buf)
+				if err != nil {
+					return nil, rpc.NewInternalErrorWithData(err.Error())
+				}	
 			}		
 		}
 		
