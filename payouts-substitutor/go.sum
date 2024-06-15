@@ -61,8 +61,8 @@ github.com/technoweenie/multipartstreamer v1.0.1 h1:XRztA5MXiR1TIRHxH2uNxXxaIkKQ
 github.com/technoweenie/multipartstreamer v1.0.1/go.mod h1:jNVxdtShOxzAsukZwTSw6MDx5eUJoiEBsSvzDU9uzog=
 github.com/tez-capital/tezpay v0.0.0-20240614145829-bd54a22dfa96 h1:nEBF4B6eYHkOHJBUQ5Jm4QOhoiXIn+ZGhSAmN6/6eE8=
 github.com/tez-capital/tezpay v0.0.0-20240614145829-bd54a22dfa96/go.mod h1:LqQFJwckYTc8wftmmFFeDAKvMDU97yGsaf8WnRqbD14=
-github.com/trilitech/tzgo v1.19.3 h1:qawpaw6Aj4DMkP5rrLNHHnuSfgEAmYTq2f6hfSSx6AQ=
-github.com/trilitech/tzgo v1.19.3/go.mod h1:YU8inIqQeOmGKAs4+t/l6aQ1SYWom1SMb3mpRnHj/MM=
+github.com/trilitech/tzgo v1.19.6 h1:xTndQ2zzNV1G5Jq3nnpILhsTzcZY8cdSJ9Cp8k+oShU=
+github.com/trilitech/tzgo v1.19.6/go.mod h1:YU8inIqQeOmGKAs4+t/l6aQ1SYWom1SMb3mpRnHj/MM=
 golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b/go.mod h1:T9bdIzuCu7OtxOm1hfPfRQxPLYneinmdGuTeoZ9dtd4=
 golang.org/x/crypto v0.24.0 h1:mnl8DM0o513X8fdIkmyFE/5hTYxbwYOjDS/+rK6qpRI=
 golang.org/x/crypto v0.24.0/go.mod h1:Z1PMYSOR5nyMcyAVAIQSKCDwalqy85Aqn1x3Ws4L5DM=

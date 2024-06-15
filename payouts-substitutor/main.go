@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 
@@ -13,6 +14,8 @@ import (
 	"github.com/tez-capital/tezpay/constants/enums"
 	"github.com/tez-capital/tezpay/extension"
 	"github.com/tez-capital/tezpay/core/generate"		
+
+	ttrpc "github.com/trilitech/tzgo/rpc"
 )
 
 type rwCloser struct {
@@ -93,23 +96,35 @@ func main() {
 			}
 		]
 		*/
+
+		indexer_client, err := ttrpc.NewClient("https://rpc.tzkt.io", nil)
+		if err != nil {
+			return nil, rpc.NewInternalErrorWithData(err.Error())
+		}	
 		
 		for i := range data.Data.Candidates {
 			candidate := data.Data.Candidates[i] 
 
-			var address string
+			if candidate.Recipient.IsContract() && candidate.Source == candidate.Recipient {
+				err = appendToFile([]byte(candidate.Source.String() + ":\n"))
+				if err != nil {
+					return nil, rpc.NewInternalErrorWithData(err.Error())
+				}	
 
-			if candidate.Source == candidate.Recipient && candidate.Recipient.IsContract() {
-				address = "yes: " + candidate.Source.String()
-			} else {
-				address = "no: " + candidate.Source.String()
-			}
+				script, err := indexer_client.GetContractScript(ctx, candidate.Source)
+				if err != nil {
+					return nil, rpc.NewInternalErrorWithData(err.Error())
+				}
 
-			err := appendToFile([]byte(address + "\n"))
-				
-			if err != nil {
-				return nil, rpc.NewInternalErrorWithData(err.Error())
-			}			
+				bigmaps := script.Bigmaps()
+
+				for k, v := range bigmaps { 
+					err = appendToFile([]byte("  -" + k + " -> " + fmt.Sprint(v) + "\n"))
+					if err != nil {
+						return nil, rpc.NewInternalErrorWithData(err.Error())
+					}	
+				}
+			}		
 		}
 		
 		return data.Data, nil

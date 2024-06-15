@@ -5,6 +5,7 @@ go 1.22.4
 require (
 	github.com/alis-is/jsonrpc2 v0.0.0-20240608185122-5f8c3990a8da
 	github.com/tez-capital/tezpay v0.0.0-20240614145829-bd54a22dfa96
+	github.com/trilitech/tzgo v1.19.6
 )
 
 require (
@@ -29,7 +30,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/technoweenie/multipartstreamer v1.0.1 // indirect
-	github.com/trilitech/tzgo v1.19.3 // indirect
 	golang.org/x/crypto v0.24.0 // indirect
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
 	golang.org/x/net v0.26.0 // indirect
