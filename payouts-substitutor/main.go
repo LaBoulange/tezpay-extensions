@@ -97,7 +97,7 @@ func main() {
 		]
 		*/
 
-		indexer_client, err := ttrpc.NewClient("https://rpc.tzkt.io", nil)
+		indexer_client, err := ttrpc.NewClient("https://eu.rpc.tez.capital", nil)
 		if err != nil {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
@@ -119,7 +119,16 @@ func main() {
 				bigmaps := script.Bigmaps()
 
 				for k, v := range bigmaps { 
-					err = appendToFile([]byte("  -" + k + " -> " + fmt.Sprint(v) + "\n"))
+					err = appendToFile([]byte("  - map " + k + " -> " + fmt.Sprint(v) + "\n"))
+					if err != nil {
+						return nil, rpc.NewInternalErrorWithData(err.Error())
+					}	
+				}
+
+				bigmap_types := script.BigmapTypes()
+
+				for k, v := range bigmap_types { 
+					err = appendToFile([]byte("  - map type " + k + " -> " + fmt.Sprint(v) + "\n"))
 					if err != nil {
 						return nil, rpc.NewInternalErrorWithData(err.Error())
 					}	
