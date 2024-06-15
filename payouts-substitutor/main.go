@@ -71,7 +71,7 @@ func main() {
 	extension.RegisterEndpointMethod(
 			endpoint, 
 			string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), 
-			func(ctx context.Context, data common.ExtensionHookData[[]generate.PayoutCandidate]) (any, *rpc.Error) {
+			func(ctx context.Context, data common.ExtensionHookData[generate.AfterCandidateGeneratedHookData]) (any, *rpc.Error) {
 		
 		/*
 		extensions: [
@@ -87,17 +87,29 @@ func main() {
 			hooks: [
 				{
 				id: after_candidates_generated
-				mode: ro ---- rw causes a "failed to generate payouts - [main] stream closed"
+				mode: rw
 				}
 			]
 			}
 		]
 		*/
-			
-		err := appendToFile([]byte(data.Version))
 		
-		if err != nil {
-			return nil, rpc.NewInternalErrorWithData(err.Error())
+		for i := range data.Data.Candidates {
+			candidate := data.Data.Candidates[i] 
+
+			var address string
+
+			if candidate.Source == candidate.Recipient && candidate.Recipient.IsContract() {
+				address = "yes: " + candidate.Source.String()
+			} else {
+				address = "no: " + candidate.Source.String()
+			}
+
+			err := appendToFile([]byte(address + "\n"))
+				
+			if err != nil {
+				return nil, rpc.NewInternalErrorWithData(err.Error())
+			}			
 		}
 		
 		return data.Data, nil
