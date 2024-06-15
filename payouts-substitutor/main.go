@@ -73,6 +73,27 @@ func main() {
 			string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), 
 			func(ctx context.Context, data common.ExtensionHookData[[]generate.PayoutCandidate]) (any, *rpc.Error) {
 		
+		/*
+		extensions: [
+			{
+			name: main
+			command: /path/to/main
+			args: [
+			]
+			kind: stdio
+			configuration: {
+				LOG_FILE:  /path/to/log
+			}
+			hooks: [
+				{
+				id: after_candidates_generated
+				mode: ro ---- rw causes a "failed to generate payouts - [main] stream closed"
+				}
+			]
+			}
+		]
+		*/
+			
 		err := appendToFile([]byte(data.Version))
 		
 		if err != nil {
