@@ -68,26 +68,18 @@ func main() {
 		}, nil
 	})
 
-	extension.RegisterEndpointMethod(endpoint, string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), func(ctx context.Context, params common.ExtensionHookData[any]) (any, *rpc.Error) {
-		var data []generate.PayoutCandidate 
+	extension.RegisterEndpointMethod(
+			endpoint, 
+			string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), 
+			func(ctx context.Context, data common.ExtensionHookData[[]generate.PayoutCandidate]) (any, *rpc.Error) {
 		
-		messageData, err := json.Marshal(params)
+		err := appendToFile([]byte(data.Version))
+		
 		if err != nil {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}
-
-		json.Unmarshal(messageData, &data)
-		for i := range data {
-			candidate := data[i] 
-
-			if candidate.Source == candidate.Recipient && candidate.Source.IsContract() {
-				appendToFile([]byte("check if Oven: " + candidate.Source.String() + "\n"))
-			} else {
-				appendToFile([]byte("keep as is: " + candidate.Source.String() + "\n"))
-			}
-		}		
 		
-		return params.Data, nil
+		return data.Data, nil
 	})
 
 	closeChannel := make(chan struct{})
