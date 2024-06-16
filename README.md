@@ -1,6 +1,8 @@
-== Tezpay Extensions ==
+# Tezpay Extensions 
 
-=== payouts-substitutor ===
+WIP - more to follow
+
+## payouts-substitutor
 
 Configuration example (config.hjson):
 
