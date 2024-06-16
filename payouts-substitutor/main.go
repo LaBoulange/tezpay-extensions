@@ -30,6 +30,7 @@ func (rw rwCloser) Close() error {
 
 type configuration struct {
 	LogFile string `json:"LOG_FILE"`
+	RpcNode string `json:"RPC_NODE"`
 }
 
 var (
@@ -37,22 +38,28 @@ var (
 )
 
 func appendToFile(data []byte) error {
-	f, err := os.OpenFile(config.LogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
+	if len(config.LogFile) > 0 {
+		f, err := os.OpenFile(config.LogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			return err
+		}
 
-	defer f.Close()
+		defer f.Close()
 
-	if _, err := f.Write(data); err != nil {
-		return err
+		if _, err := f.Write(data); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func rpcClient() (*ttrpc.Client, error) {
-	return ttrpc.NewClient("https://eu.rpc.tez.capital", nil)
+	if len(config.RpcNode) == 0 {
+		config.RpcNode = "https://eu.rpc.tez.capital"
+	}
+	
+	return ttrpc.NewClient(config.RpcNode, nil)
 }
 
 func requiresInvestigations(candidate generate.PayoutCandidate) bool {
