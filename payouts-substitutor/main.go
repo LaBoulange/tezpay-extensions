@@ -41,11 +41,67 @@ func appendToFile(data []byte) error {
 	if err != nil {
 		return err
 	}
+
 	defer f.Close()
+
 	if _, err := f.Write(data); err != nil {
 		return err
 	}
+
 	return nil
+}
+
+func rpcClient() (*ttrpc.Client, error) {
+	return ttrpc.NewClient("https://eu.rpc.tez.capital", nil)
+}
+
+func requiresInvestigations(candidate generate.PayoutCandidate) bool {
+	return candidate.Recipient.IsContract() && candidate.Source == candidate.Recipient
+}
+
+func isOven(storage_map map[string]interface{}) bool {
+	_, is_oven := storage_map["ovenProxyContractAddress"]
+
+	return is_oven
+}
+
+func getStorageMap(rpc_client *ttrpc.Client, ctx context.Context, contract generate.PayoutCandidate) (map[string]interface{}, error) {
+	script, err := rpc_client.GetContractScript(ctx, contract.Source)
+	if err != nil {
+		return nil, err
+	}
+
+	storage_raw_content := micheline.NewValue(script.StorageType(), script.Storage)
+
+	storage_map_interface, err := storage_raw_content.Map()
+	if err != nil {
+		return nil, err
+	}	
+
+	storage_map, _ := storage_map_interface.(map[string]interface{})	
+
+	return storage_map, nil
+}
+
+func getOwnerAddress(storage_map map[string]interface{}) (*string, error) {
+	owner_address, exists := storage_map["owner"]
+
+	if exists {
+		o, err := json.Marshal(owner_address)
+		if err != nil {
+			return nil, err
+		}
+
+		var owner_address_string string
+		err = json.Unmarshal(o, &owner_address_string)
+		if err != nil {
+			return nil, err
+		}
+
+		return &owner_address_string, nil
+	} else {
+		return nil, nil
+	}
 }
 
 func main() {
@@ -77,28 +133,7 @@ func main() {
 			string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), 
 			func(ctx context.Context, data_in common.ExtensionHookData[generate.AfterCandidateGeneratedHookData]) (any, *rpc.Error) {
 		
-		/*
-		extensions: [
-			{
-			name: main
-			command: /path/to/main
-			args: [
-			]
-			kind: stdio
-			configuration: {
-				LOG_FILE:  /path/to/log
-			}
-			hooks: [
-				{
-				id: after_candidates_generated
-				mode: rw
-				}
-			]
-			}
-		]
-		*/
-
-		indexer_client, err := ttrpc.NewClient("https://eu.rpc.tez.capital", nil)
+		rpc_client, err := rpcClient()
 		if err != nil {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
@@ -106,51 +141,32 @@ func main() {
 		for i := range data_in.Data.Candidates {
 			candidate := data_in.Data.Candidates[i] 
 
-			if candidate.Recipient.IsContract() && candidate.Source == candidate.Recipient {
+			if requiresInvestigations(candidate) {
 				err = appendToFile([]byte(candidate.Source.String() + ": "))
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
 
-				script, err := indexer_client.GetContractScript(ctx, candidate.Source)
-				if err != nil {
-					return nil, rpc.NewInternalErrorWithData(err.Error())
-				}
-
-				storage_raw_content := micheline.NewValue(script.StorageType(), script.Storage)
-
-				storage_map_interface, err := storage_raw_content.Map()
+				storage_map, err := getStorageMap(rpc_client, ctx, candidate)
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
 
-				storage_map, _ := storage_map_interface.(map[string]interface{})
-				
-				_, is_oven := storage_map["ovenProxyContractAddress"]
+				if isOven(storage_map) {
+					owner_address, err := getOwnerAddress(storage_map)
+					if err != nil {
+						return nil, rpc.NewInternalErrorWithData(err.Error())
+					}	
 
-				if is_oven {
-					owner_address, exists := storage_map["owner"]
-
-					if !exists {
+					if owner_address == nil {
 						err = appendToFile([]byte("WARNING: no owner address. Kept unchanged.\n"))
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
 					} else {
-						o, err := json.Marshal(owner_address)
-						if err != nil {
-							return nil, rpc.NewInternalErrorWithData(err.Error())
-						}
+						data_in.Data.Candidates[i].Recipient = tezos.MustParseAddress(*owner_address)
 
-						var owner_address_string string
-						err = json.Unmarshal(o, &owner_address_string)
-						if err != nil {
-							return nil, rpc.NewInternalErrorWithData(err.Error())
-						}
-
-						data_in.Data.Candidates[i].Recipient = tezos.MustParseAddress(owner_address_string)
-
-						err = appendToFile([]byte("redirected to " + string(owner_address_string) + ".\n"))
+						err = appendToFile([]byte("redirected to " + string(*owner_address) + ".\n"))
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
