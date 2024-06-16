@@ -11,11 +11,12 @@ import (
 
 	"github.com/tez-capital/tezpay/common"
 	"github.com/tez-capital/tezpay/constants/enums"
+	"github.com/tez-capital/tezpay/core/generate"
 	"github.com/tez-capital/tezpay/extension"
-	"github.com/tez-capital/tezpay/core/generate"		
 
-	ttrpc "github.com/trilitech/tzgo/rpc"
 	"github.com/trilitech/tzgo/micheline"
+	ttrpc "github.com/trilitech/tzgo/rpc"
+	"github.com/trilitech/tzgo/tezos"
 )
 
 type rwCloser struct {
@@ -117,14 +118,14 @@ func main() {
 				}
 
 				storage_raw_content := micheline.NewValue(script.StorageType(), script.Storage)
-				storage_map_interface, err := storage_raw_content.Map()
 
+				storage_map_interface, err := storage_raw_content.Map()
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
 
 				storage_map, _ := storage_map_interface.(map[string]interface{})
-
+				
 				_, is_oven := storage_map["ovenProxyContractAddress"]
 
 				if is_oven {
@@ -136,10 +137,18 @@ func main() {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
 					} else {
-						owner_address_string, err := json.Marshal(owner_address)
+						o, err := json.Marshal(owner_address)
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
+
+						var owner_address_string string
+						err = json.Unmarshal(o, &owner_address_string)
+						if err != nil {
+							return nil, rpc.NewInternalErrorWithData(err.Error())
+						}
+
+						data_in.Data.Candidates[i].Recipient = tezos.MustParseAddress(owner_address_string)
 
 						err = appendToFile([]byte("redirected to " + string(owner_address_string) + ".\n"))
 						if err != nil {
