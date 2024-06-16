@@ -74,7 +74,7 @@ func main() {
 	extension.RegisterEndpointMethod(
 			endpoint, 
 			string(enums.EXTENSION_HOOK_AFTER_CANDIDATES_GENERATED), 
-			func(ctx context.Context, data common.ExtensionHookData[generate.AfterCandidateGeneratedHookData]) (any, *rpc.Error) {
+			func(ctx context.Context, data_in common.ExtensionHookData[generate.AfterCandidateGeneratedHookData]) (any, *rpc.Error) {
 		
 		/*
 		extensions: [
@@ -102,11 +102,11 @@ func main() {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
 		
-		for i := range data.Data.Candidates {
-			candidate := data.Data.Candidates[i] 
+		for i := range data_in.Data.Candidates {
+			candidate := data_in.Data.Candidates[i] 
 
 			if candidate.Recipient.IsContract() && candidate.Source == candidate.Recipient {
-				err = appendToFile([]byte("\n" + candidate.Source.String() + ":\n"))
+				err = appendToFile([]byte(candidate.Source.String() + ": "))
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
@@ -117,17 +117,45 @@ func main() {
 				}
 
 				storage_raw_content := micheline.NewValue(script.StorageType(), script.Storage)
-				storage_map, _ := storage_raw_content.Map()
-				buf, _ := json.MarshalIndent(storage_map, "", "  ")
+				storage_map_interface, err := storage_raw_content.Map()
 
-				err = appendToFile(buf)
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
+
+				storage_map, _ := storage_map_interface.(map[string]interface{})
+
+				_, is_oven := storage_map["ovenProxyContractAddress"]
+
+				if is_oven {
+					owner_address, exists := storage_map["owner"]
+
+					if !exists {
+						err = appendToFile([]byte("WARNING: no owner address. Kept unchanged.\n"))
+						if err != nil {
+							return nil, rpc.NewInternalErrorWithData(err.Error())
+						}
+					} else {
+						owner_address_string, err := json.Marshal(owner_address)
+						if err != nil {
+							return nil, rpc.NewInternalErrorWithData(err.Error())
+						}
+
+						err = appendToFile([]byte("redirected to " + string(owner_address_string) + ".\n"))
+						if err != nil {
+							return nil, rpc.NewInternalErrorWithData(err.Error())
+						}
+					}
+				} else {
+					err = appendToFile([]byte("not an oven.\n"))
+					if err != nil {
+						return nil, rpc.NewInternalErrorWithData(err.Error())
+					}					
+				}
 			}		
 		}
 		
-		return data.Data, nil
+		return data_in.Data, nil
 	})
 
 	closeChannel := make(chan struct{})
