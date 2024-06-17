@@ -11,6 +11,9 @@ This extension contributes to the solution proposed by [TezCapital](https://gith
 
 ### Installation
 
+* Download the executable appropriate for your operating system and hardware from the [latest release page](https://github.com/LaBoulange/tezpay-extensions/releases/latest).
+* Move the downloaded file to the directory from which you intend to run it, typically the same location as `tezpay`.
+
 ### Enabling the extension
 
 Add the following element to the list of extensions defined in `config.hjson`:
