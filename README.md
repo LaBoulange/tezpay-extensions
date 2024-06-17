@@ -45,7 +45,7 @@ Configure the following fields of this element:
 - `LOG_FILE`: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
 - `RPC_NODE` URL of the RPC node used to query the contracts *(optional: if omitted, the default URL is `https://eu.rpc.tez.capital`)*.
 
-Restart `tezpay` if it is running in `continual` mode. You can ensure the extension is working properly by runnin `tezpay -c <previous cycle number> generate-payouts`.
+Restart `tezpay` if it is running in `continual` mode. You can ensure the extension is working properly by running `tezpay -c <previous cycle number> generate-payouts`.
 
 ## Should you wish to support us
 
