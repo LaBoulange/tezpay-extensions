@@ -16,7 +16,7 @@ This extension contributes to the solution proposed by [TezCapital](https://gith
 
 ### Enabling the extension
 
-Add the following element to the list of extensions defined in `config.hjson`:
+Add the following element to the list of extensions defined in `tezpay`'s `config.hjson` file:
 
     extensions: [
         {
