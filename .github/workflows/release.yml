@@ -13,27 +13,27 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '>=1.22.0'
+          go-version: '>=1.22.4'
       - name: Test
-        run: go test -v ./payouts-substitutor
+        run: go test -C ./payouts-substitutor -v
       - name: Build win-arm64
-        run: env CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-win-arm64.exe
+        run: env CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-win-arm64.exe
       - name: Build win-amd64
-        run: env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-win-amd64.exe
+        run: env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-win-amd64.exe
       - name: Build linux-arm64
-        run: env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-linux-arm64
+        run: env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-linux-arm64
       - name: Build linux-riscv64
-        run: env CGO_ENABLED=0 GOOS=linux GOARCH=riscv64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-linux-riscv64
+        run: env CGO_ENABLED=0 GOOS=linux GOARCH=riscv64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-linux-riscv64
       - name: Build linux-amd64
-        run: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-linux-amd64
+        run: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-linux-amd64
       - name: Build macos-arm64
-        run: env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-macos-arm64
+        run: env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-macos-arm64
       - name: Build macos-amd64
-        run: env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -trimpath -C ./payouts-substitutor -o build-version/payouts-substitutor-macos-amd64
+        run: env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -C ./payouts-substitutor -ldflags="-s -w" -trimpath -o ../build-version/payouts-substitutor-macos-amd64
 
       - name: Upload files to a GitHub release
         uses: svenstaro/upload-release-action@2.4.0
         with:
           file_glob: true
           tag: ${{ github.ref }}
-          file: build-version/payouts-substitutor*
+          file: ./build-version/payouts-substitutor*
