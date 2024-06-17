@@ -9,9 +9,9 @@ This extension allows the redirection of delegation rewards due to smart contrac
 
 This extension contributes to the solution proposed by [TezCapital](https://github.com/tez-capital) to the balance management issue of these contracts, which results in a zero reward from the protocol while there is actually delegation (see the complete description [here on Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256/1)).
 
-### Enabling the extension
+### Installation
 
-## Activation of the extension in TezPay
+### Enabling the extension
 
 Add the following element to the list of extensions defined in `config.hjson`:
 
