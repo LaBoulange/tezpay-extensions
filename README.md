@@ -1,10 +1,19 @@
 # Tezpay Extensions 
 
-WIP - more to follow
+This repository is dedicated to hosting the [Tezpay](https://github.com/tez-capital/tezpay/) extensions that we are developing at La Boulange. 
+We only have one so far, but likely more will follow.
 
 ## payouts-substitutor
 
-Enabling the extension in config.hjson:
+This extension allows the redirection of delegation rewards due to smart contracts (address "KT") of the "oven" type to the owner accounts of the respective contracts.
+
+This extension contributes to the solution proposed by [TezCapital](https://github.com/tez-capital) to the balance management issue of these contracts, which results in a zero reward from the protocol while there is actually delegation (see the complete description [here on Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256/1)).
+
+### Enabling the extension
+
+## Activation of the extension in TezPay
+
+Add the following element to the list of extensions defined in `config.hjson`:
 
     extensions: [
         {
@@ -26,7 +35,37 @@ Enabling the extension in config.hjson:
         }
     ]
 
-Configuration:
-* LOG_FILE is optional. If omitted, no log file will be produced.
-* RPC_NODE is optional. It defaults to https://eu.rpc.tez.capital
+**Note**: the `extensions: [ ... ]` array should only be included if no extensions have previously been configured in `config.hjson`. If other extensions are already listed, only the inner block `{ ... }` should be added.    
 
+Then configure the following fields of this element:
+- `command`: `/path/to/` should be replaced by the path to the directory where you placed the `payouts-substitutor` extension.
+- `LOG_FILE`: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
+- `RPC_NODE` URL of the RPC node used to query the contracts *(optional: if omitted, the default URL is `https://eu.rpc.tez.capital`)*.
+
+Then restart `tezpay` if it is running in `continual` mode. You can ensure the extension is working properly by runnin `tezpay -c <previous cycle number> generate-payouts`.
+
+## Should you wish to support us
+
+You can send a donation:
+- to our baker's address: [tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY](https://tzkt.io/tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY/schedule)
+- or to its Tezos domain name: [laboulange.tez](https://tzkt.io/laboulange.tez/schedule)
+
+Or just click here: 
+
+[![Button Support]][Link Support] 
+
+This is not mandatory, but it is greatly appreciated!
+
+[Button Support]: https://img.shields.io/badge/Support_La_Boulange!_(5_XTZ)-007bff?style=for-the-badge
+[Link Support]: https://tezos-share.stroep.nl/?id=tfLn0 'Support La Boulange (5 XTZ)'
+
+## Contact
+
+Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
+- MailChain: [laboulange@mailchain](https://app.mailchain.com/)
+- E-mail: la.boulange.tezos@gmail.com
+- DNS: https://dns.xyz/fr/LaBoulange
+- Twitter: https://twitter.com/LaBoulangeTezos
+- Telegram: https://t.me/laboulangetezos
+
+We are also active in various Telegram and Discord groups related to Tezos.
