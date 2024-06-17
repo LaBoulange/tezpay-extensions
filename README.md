@@ -40,12 +40,14 @@ Add the following element to the list of extensions defined in `config.hjson`:
 
 **Note**: the `extensions: [ ... ]` array should only be included if no extensions have previously been configured in `config.hjson`. If other extensions are already listed, only the inner block `{ ... }` should be added.    
 
-Configure the following fields of this element:
-- `command`: `/path/to/` should be replaced by the path to the directory where you placed the `payouts-substitutor` extension.
-- `LOG_FILE`: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
-- `RPC_NODE` URL of the RPC node used to query the contracts *(optional: if omitted, the default URL is `https://eu.rpc.tez.capital`)*.
+Configure the following fields of the element above:
+- **`command`**: `/path/to/` should be replaced by the path to the directory where you placed the `payouts-substitutor` extension.
+- **`LOG_FILE`**: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
+- **`RPC_NODE`**: URL of the RPC node used to query the contracts *(optional: if omitted, the default URL is `https://eu.rpc.tez.capital`)*.
 
-Restart `tezpay` if it is running in `continual` mode. You can ensure the extension is working properly by running `tezpay -c <previous cycle number> generate-payouts`.
+Restart `tezpay` if it is running in `continual` mode. 
+
+You can ensure the extension is working properly by running `tezpay -c <previous cycle number> generate-payouts`.
 
 ## Should you wish to support us
 
