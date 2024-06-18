@@ -13,6 +13,7 @@ This extension contributes to the solution proposed by [TezCapital](https://gith
 
 - Download the executable appropriate for your operating system and hardware from the [latest release page](https://github.com/LaBoulange/tezpay-extensions/releases/latest).
 - Move the downloaded file to the directory from which you intend to run it, typically the same location as `tezpay`.
+- If not already done at download or move time, rename it to 'payouts-substitutor'.
 
 ### Enabling the extension
 
