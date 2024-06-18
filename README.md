@@ -3,20 +3,32 @@
 This repository is dedicated to hosting the [Tezpay](https://github.com/tez-capital/tezpay/) extensions that we are developing at La Boulange. 
 We only have one so far, but likely more will follow.
 
-## payouts-substitutor
+## Disclaimer
+
+This repository contains extensions for the blockchain reward distribution engine Tezpay. The code is licensed under the European Union Public License (EUPL) v1.2.
+
+The software is provided "as-is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+Use this software at your own risk. 
+
+For the full license, please refer to the LICENSE.txt file.
+
+## Extensions
+
+### payouts-substitutor
 
 This extension allows the redirection of delegation rewards due to smart contracts (address "KT") of the "oven" type to the owner accounts of the respective contracts.
 
 This extension contributes to the solution proposed by [TezCapital](https://github.com/tez-capital) to the balance management issue of these contracts, which results in a zero reward from the protocol while there is actually delegation (see the complete description [here on Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256/1)).
 
-### Installation
+#### Installation
 
 - Download the executable appropriate for your operating system and hardware from the [latest release page](https://github.com/LaBoulange/tezpay-extensions/releases/latest).
 - Move the downloaded file to the directory from which you intend to run it, typically the same location as `tezpay`.
 - If not already done at download or move time, rename it to `payouts-substitutor`.
 - Make sure it is executable by the user that runs `tezpay`.
 
-### Enabling the extension
+#### Configuration
 
 Add the following element to the list of extensions defined in `tezpay`'s `config.hjson` file:
 
