@@ -37,7 +37,7 @@ var (
 	config configuration = configuration{}
 )
 
-func appendToFile(data []byte) error {
+func writeLog(data []byte) error {
 	if len(config.LogFile) > 0 {
 		f, err := os.OpenFile(config.LogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
@@ -149,7 +149,7 @@ func main() {
 			candidate := data_in.Data.Candidates[i] 
 
 			if requiresInvestigations(candidate) {
-				err = appendToFile([]byte(candidate.Source.String() + ": "))
+				err = writeLog([]byte(candidate.Source.String() + ": "))
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
@@ -166,20 +166,20 @@ func main() {
 					}	
 
 					if owner_address == nil {
-						err = appendToFile([]byte("WARNING: no owner address. Kept unchanged.\n"))
+						err = writeLog([]byte("WARNING: no owner address. Kept unchanged.\n"))
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
 					} else {
 						data_in.Data.Candidates[i].Recipient = tezos.MustParseAddress(*owner_address)
 
-						err = appendToFile([]byte("redirected to " + string(*owner_address) + ".\n"))
+						err = writeLog([]byte("redirected to " + string(*owner_address) + ".\n"))
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
 					}
 				} else {
-					err = appendToFile([]byte("not an oven.\n"))
+					err = writeLog([]byte("not an oven.\n"))
 					if err != nil {
 						return nil, rpc.NewInternalErrorWithData(err.Error())
 					}					
