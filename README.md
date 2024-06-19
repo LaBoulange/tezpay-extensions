@@ -3,6 +3,16 @@
 This repository is dedicated to hosting the [Tezpay](https://github.com/tez-capital/tezpay/) extensions that we are developing at La Boulange. 
 We only have one so far, but likely more will follow.
 
+Content of this document:
+- [Tezpay Extensions](#tezpay-extensions)
+  * [Disclaimer](#disclaimer)
+  * [Extensions](#extensions)
+    + [payouts-substitutor](#payouts-substitutor)
+      - [Installation](#installation)
+      - [Configuration](#configuration)
+  * [Should you wish to support us](#should-you-wish-to-support-us)
+  * [Contact](#contact)
+
 ## Disclaimer
 
 This repository contains extensions for the blockchain reward distribution engine Tezpay. The code is licensed under the European Union Public License (EUPL) v1.2.
