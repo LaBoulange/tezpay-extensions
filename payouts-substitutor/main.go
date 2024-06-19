@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 
@@ -145,6 +146,11 @@ func main() {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
 		
+		err = writeLog([]byte("=== Cycle " + fmt.Sprintf("%d", data_in.Data.Cycle) + "===\n"))
+		if err != nil {
+			return nil, rpc.NewInternalErrorWithData(err.Error())
+		}	
+
 		for i := range data_in.Data.Candidates {
 			candidate := data_in.Data.Candidates[i] 
 
