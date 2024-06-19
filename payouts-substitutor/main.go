@@ -146,7 +146,7 @@ func main() {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
 		
-		err = writeLog([]byte("=== Cycle " + fmt.Sprintf("%d", data_in.Data.Cycle) + "===\n"))
+		err = writeLog([]byte("=== Cycle " + fmt.Sprintf("%d", data_in.Data.Cycle) + " ===\n"))
 		if err != nil {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
