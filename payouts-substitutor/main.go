@@ -38,16 +38,32 @@ var (
 	config configuration = configuration{}
 )
 
-func writeLog(data []byte) error {
+func openLog() (*os.File, error) {
 	if len(config.LogFile) > 0 {
 		f, err := os.OpenFile(config.LogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		defer f.Close()
+		return f, nil
+	}
 
-		if _, err := f.Write(data); err != nil {
+	return nil, nil
+}
+
+func closeLog(f *os.File) error {
+	if f != nil {
+		return f.Close()
+	}
+
+	return nil
+}
+
+func writeLog(f *os.File, data []byte) error {
+	if f != nil {
+		_, err := f.Write(data); 
+
+		if err != nil {
 			return err
 		}
 	}
@@ -146,7 +162,12 @@ func main() {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
 		
-		err = writeLog([]byte("=== Cycle " + fmt.Sprintf("%d", data_in.Data.Cycle) + " ===\n"))
+		log, err := openLog()
+		if err != nil {
+			return nil, rpc.NewInternalErrorWithData(err.Error())
+		}	
+
+		err = writeLog(log, []byte("=== Cycle " + fmt.Sprintf("%d", data_in.Data.Cycle) + " ===\n"))
 		if err != nil {
 			return nil, rpc.NewInternalErrorWithData(err.Error())
 		}	
@@ -155,7 +176,7 @@ func main() {
 			candidate := data_in.Data.Candidates[i] 
 
 			if requiresInvestigations(candidate) {
-				err = writeLog([]byte(candidate.Source.String() + ": "))
+				err = writeLog(log, []byte(candidate.Source.String() + ": "))
 				if err != nil {
 					return nil, rpc.NewInternalErrorWithData(err.Error())
 				}	
@@ -172,26 +193,33 @@ func main() {
 					}	
 
 					if owner_address == nil {
-						err = writeLog([]byte("WARNING: no owner address. Kept unchanged.\n"))
+						err = writeLog(log, []byte("WARNING: no owner address. Kept unchanged.\n"))
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
 					} else {
 						data_in.Data.Candidates[i].Recipient = tezos.MustParseAddress(*owner_address)
 
-						err = writeLog([]byte("redirected to " + string(*owner_address) + ".\n"))
+						err = writeLog(log, []byte("redirected to " + string(*owner_address) + ".\n"))
 						if err != nil {
 							return nil, rpc.NewInternalErrorWithData(err.Error())
 						}
 					}
 				} else {
-					err = writeLog([]byte("not an oven.\n"))
+					err = writeLog(log, []byte("not an oven.\n"))
 					if err != nil {
 						return nil, rpc.NewInternalErrorWithData(err.Error())
 					}					
 				}
+			} else if candidate.Source.IsContract() {
+				err = writeLog(log, []byte("already substituted.\n"))
+				if err != nil {
+					return nil, rpc.NewInternalErrorWithData(err.Error())
+				}
 			}		
 		}
+
+		closeLog(log)
 		
 		return data_in.Data, nil
 	})
