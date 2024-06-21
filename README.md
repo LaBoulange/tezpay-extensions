@@ -68,7 +68,7 @@ Add the following element to the list of extensions defined in `tezpay`'s `confi
 Configure the following fields of the element above:
 - **`command`**: `/path/to/` should be replaced by the path to the directory where you placed the `payouts-substitutor` extension.
 - **`LOG_FILE`**: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
-- **`LOG_LEVEL`**: verbosity of the produced log. Allowed values are:
+- **`LOG_LEVEL`**: verbosity of the produced log. *(optional: if omitted, the defult value is 'contracts')*. Allowed values are:
     - *errors*: logs only errors and warnings.
     - *redirects*: everything from *errors* + logs about redirections of rewards to substituted smart contract owner addresses.
     - *contracts*: everything from *redirects* + information related to all other smart contracts.
