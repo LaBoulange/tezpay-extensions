@@ -70,10 +70,10 @@ Configure the following fields of the element above:
 - **`LOG_FILE`**: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
 - **`LOG_LEVEL`**: verbosity of the produced log. Allowed values are:
     - *errors*: logs only errors and warnings.
-    - *redirects*: includes everything in *errors*, plus logs about redirections of rewards to substituted smart contract owner addresses.
-    - *contracts*: includes everything in *redirects*, plus information related to all other smart contracts.
-    - *verbose*: includes everything in *contracts*, plus information related to non-smart-contract addresses.
-    - *debug*: includes everything in *verbose*, plus technical information.
+    - *redirects*: everything from *errors* + logs about redirections of rewards to substituted smart contract owner addresses.
+    - *contracts*: everything from *redirects* + information related to all other smart contracts.
+    - *verbose*: everything from *contracts* + information related to non-smart-contract addresses.
+    - *debug*: everything from *verbose* + technical information.
 - **`RPC_NODE`**: URL of the RPC node used to query the contracts *(optional: if omitted, the default URL is `https://eu.rpc.tez.capital`)*.
 
 Restart `tezpay` if it is running in `continual` mode. 
