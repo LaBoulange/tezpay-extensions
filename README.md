@@ -51,6 +51,7 @@ Add the following element to the list of extensions defined in `tezpay`'s `confi
             kind: stdio
             configuration: {
                 LOG_FILE: /path/to/log
+                LOG_LEVEL: contracts
                 RPC_NODE: https://eu.rpc.tez.capital
             }
             hooks: [
@@ -67,6 +68,12 @@ Add the following element to the list of extensions defined in `tezpay`'s `confi
 Configure the following fields of the element above:
 - **`command`**: `/path/to/` should be replaced by the path to the directory where you placed the `payouts-substitutor` extension.
 - **`LOG_FILE`**: `/path/to/log` should be replaced by the path of the log file the extension should produce. The directory should exist, the extension will only create the file. *(optional: if omitted, no log file will be produced)*.
+- **`LOG_LEVEL`**: verbosity of the produced log. Allowed values are:
+    - *errors*: logs only errors and warnings.
+    - *redirects*: includes everything in *errors*, plus logs about redirections of rewards to substituted smart contract owner addresses.
+    - *contracts*: includes everything in *redirects*, plus information related to all other smart contracts.
+    - *verbose*: includes everything in *contracts*, plus information related to non-smart-contract addresses.
+    - *debug*: includes everything in *verbose*, plus technical information.
 - **`RPC_NODE`**: URL of the RPC node used to query the contracts *(optional: if omitted, the default URL is `https://eu.rpc.tez.capital`)*.
 
 Restart `tezpay` if it is running in `continual` mode. 
