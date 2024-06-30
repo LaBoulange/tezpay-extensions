@@ -2,11 +2,11 @@ All notable changes are documented in this file.
 
 ## *TBD* - *TBD*
 
-## v1.0 - 2024-06-21
-
 ### payouts-substitutor
 
 - Simplified configuration instructions
+
+## v1.0 - 2024-06-21
 
 ### General
 
