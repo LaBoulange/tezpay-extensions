@@ -53,7 +53,7 @@ Add the following element to the list of extensions defined in `tezpay`'s `confi
                 RPC_NODE: https://eu.rpc.tez.capital
             }
             hooks: [
-                after_candidates_generated: rw
+                after_candidates_generated:rw
             ]
         }
     ]
