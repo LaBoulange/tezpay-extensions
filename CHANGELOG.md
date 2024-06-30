@@ -1,6 +1,12 @@
-All notable changes to this project are documented in this file.
+All notable changes are documented in this file.
+
+## *TBD* - *TBD*
 
 ## v1.0 - 2024-06-21
+
+### payouts-substitutor
+
+- Simplified configuration instructions
 
 ### General
 
@@ -9,7 +15,7 @@ All notable changes to this project are documented in this file.
 ### payouts-substitutor
 
 - Added the `LOG_LEVEL` configuration parameter
-- configuration verification at initialization time
+- Configuration verification at initialization time
 - Significant code refactoring
 
 ## v0.2 - 2024-06-19

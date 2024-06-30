@@ -46,8 +46,6 @@ Add the following element to the list of extensions defined in `tezpay`'s `confi
         {
             name: payouts-substitutor
             command: /path/to/payouts-substitutor
-            args: [
-            ]
             kind: stdio
             configuration: {
                 LOG_FILE: /path/to/log
@@ -55,10 +53,7 @@ Add the following element to the list of extensions defined in `tezpay`'s `confi
                 RPC_NODE: https://eu.rpc.tez.capital
             }
             hooks: [
-                {
-                    id: after_candidates_generated
-                    mode: rw
-                }
+                after_candidates_generated: rw
             ]
         }
     ]
