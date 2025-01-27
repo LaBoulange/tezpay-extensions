@@ -1,13 +1,13 @@
 # Tezpay Extensions 
 
 This repository is dedicated to hosting the [Tezpay](https://github.com/tez-capital/tezpay/) extensions that we are developing at La Boulange. 
-We only have one so far, but likely more will follow.
+We only have one (and deprecated) so far, but likely more will follow.
 
 Content of this document:
 - [Tezpay Extensions](#tezpay-extensions)
   * [Disclaimer](#disclaimer)
   * [Extensions](#extensions)
-    + [payouts-substitutor](#payouts-substitutor)
+    + [payouts-substitutor (deprected)](#payouts-substitutor)
       - [Installation](#installation)
       - [Configuration](#configuration)
   * [Should you wish to support us](#should-you-wish-to-support-us)
@@ -26,6 +26,8 @@ For the full license, please refer to the LICENSE.txt file.
 ## Extensions
 
 ### payouts-substitutor
+
+*DEPRECATED SINCE THE ACTIVATION OF THE QUEBEC PROTOCOL*
 
 This extension allows the redirection of delegation rewards due to smart contracts (address "KT") of the "oven" type to the owner accounts of the respective contracts.
 

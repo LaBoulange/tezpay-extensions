@@ -4,7 +4,7 @@ All notable changes are documented in this file.
 
 ### payouts-substitutor
 
-- Simplified configuration instructions
+- Deprecated since the activation of the Quebec protocol
 
 ## v1.0 - 2024-06-21
 
